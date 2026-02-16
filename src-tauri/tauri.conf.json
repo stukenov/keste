@@ -1,0 +1,68 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "Keste",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "fs": {
+        "all": false,
+        "scope": ["$DOCUMENT/*", "$HOME/*"]
+      },
+      "dialog": {
+        "all": false,
+        "open": true,
+        "save": true
+      },
+      "http": {
+        "all": false,
+        "scope": []
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": ["nsis", "app", "dmg", "appimage"],
+      "identifier": "com.keste.spreadsheet",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "externalBin": [],
+      "resources": [],
+      "windows": {
+        "wix": {
+          "language": "en-US"
+        },
+        "nsis": {
+          "installerIcon": "icons/icon.ico",
+          "license": null,
+          "displayLanguageSelector": false
+        }
+      }
+    },
+    "security": {
+      "csp": "default-src 'self' http://localhost:1420 tauri:; script-src 'self' 'unsafe-eval' http://localhost:1420; style-src 'self' 'unsafe-inline' http://localhost:1420; img-src 'self' data: blob: http://localhost:1420; connect-src 'self' ws://localhost:1420 http://localhost:1420"
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "Keste - Spreadsheets",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 800,
+        "minHeight": 600
+      }
+    ]
+  }
+}

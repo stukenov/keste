@@ -1,0 +1,71 @@
+name: Release (Tauri)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      release_id: ${{ steps.release.outputs.id }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub Release
+        id: release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    needs: create-release
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+      - name: Install Linux dependencies
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          # Detect Ubuntu version to pick correct WebKitGTK package name
+          . /etc/os-release
+          if [ "$VERSION_ID" = "24.04" ]; then
+            WEBKIT_PKG=libwebkit2gtk-4.1-dev
+            JSC_PKG=libjavascriptcoregtk-4.1-dev
+          else
+            WEBKIT_PKG=libwebkit2gtk-4.0-dev
+            JSC_PKG=libjavascriptcoregtk-4.0-dev
+          fi
+          sudo apt-get install -y \
+            "$WEBKIT_PKG" "$JSC_PKG" build-essential curl wget pkg-config libsoup2.4-dev \
+            libssl-dev libgtk-3-dev libglib2.0-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - name: Install NPM deps
+        run: npm ci
+      - name: Build with Tauri
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+          tauri-json-path: src-tauri/tauri.conf.json
+          includeDebug: false
+          includeUpdaterJson: false
+          iconPath: src-tauri/icons/icon.ico
+
+
