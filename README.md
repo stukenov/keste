@@ -2,11 +2,15 @@
 
 **Modern Spreadsheet Editor Powered by SQLite**
 
-A beautiful, fast, and private alternative to Google Sheets that runs completely offline on your desktop.
+> A minimalist, fast, and private spreadsheet that stores sheets, cells & formulas as plain SQLite tables — portable, scriptable, and LLM-friendly. It bridges spreadsheets and SQL for local analytics and AI workflows, fully offline on your desktop.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?logo=typescript&logoColor=white)
+![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri-FFC131.svg?logo=tauri&logoColor=white)
 ![Version](https://img.shields.io/badge/version-0.1.0-green.svg)
+
+> 📸 **Screenshot / demo coming soon.** A GIF or screenshot of the editor would go here — contributions welcome (drop an image in the repo and link it from this section).
 
 ---
 
@@ -25,6 +29,21 @@ Keste is a **desktop spreadsheet editor** that uses SQLite as its storage format
 - **Efficiency**: Compact storage with built-in compression
 - **Flexibility**: Direct SQL access to your spreadsheet data
 - **Standard**: Widely supported, battle-tested database format
+
+---
+
+## 💡 Why Keste
+
+Most spreadsheets lock your data inside an opaque binary file. Keste makes the **file format itself a database**: every `.kst` file is just a SQLite database with tables for sheets, cells, formulas, and styles (see [File Format](#-file-format) below).
+
+That unlocks a few things you can't easily do with `.xlsx`:
+
+- **SQL-native** — open any `.kst` file with the standard `sqlite3` CLI or any SQLite client and query your spreadsheet with plain SQL. No proprietary parser required.
+- **Scriptable & portable** — a single self-contained file you can version, diff, back up, and pipe through your own tooling.
+- **LLM-friendly** — because the schema is transparent SQL, it's easy for AI agents and scripts to read, reason about, and transform spreadsheet data programmatically.
+- **Local-first** — runs entirely on your machine with no cloud, no telemetry, and no account.
+
+The result is a bridge between **spreadsheets** (for editing) and **SQL** (for analytics and automation) — ideal for local analytics and AI workflows.
 
 ---
 
@@ -120,21 +139,38 @@ cd keste
 npm install
 ```
 
-3. **Run in development mode**:
+3. **Run in development mode** (launches the desktop app):
 ```bash
 npm run tauri dev
+# equivalent dedicated script:
+npm run tauri:dev
+```
+
+   To run only the web frontend in the browser (without the Tauri shell):
+```bash
+npm run dev
 ```
 
 ### Building for Production
 
 ```bash
 npm run tauri build
+# equivalent dedicated script:
+npm run tauri:build
 ```
 
 **Outputs**:
 - Windows: `src-tauri/target/release/keste.exe`
 - macOS: `src-tauri/target/release/bundle/macos/`
 - Linux: `src-tauri/target/release/bundle/appimage/`
+
+### Running Tests
+
+```bash
+npm test              # run the Vitest suite
+npm run test:ui       # interactive Vitest UI
+npm run test:coverage # generate a coverage report
+```
 
 ---
 
