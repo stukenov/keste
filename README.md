@@ -10,8 +10,6 @@
 ![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri-FFC131.svg?logo=tauri&logoColor=white)
 ![Version](https://img.shields.io/badge/version-0.1.0-green.svg)
 
-> 📸 **Screenshot / demo coming soon.** A GIF or screenshot of the editor would go here — contributions welcome (drop an image in the repo and link it from this section).
-
 ---
 
 ## 🎯 What is Keste?
